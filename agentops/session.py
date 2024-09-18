@@ -151,6 +151,8 @@ class Session:
             f"Analytics for this run - "
             f"LLM calls: {self.event_counts['llms']} | "
             f"Tool calls: {self.event_counts['tools']} | "
+            f"Actions: {self.event_counts['actions']} | "
+            f"Errors: {self.event_counts['errors']} | "
             f"Duration: {formatted_duration} | "
             f"Cost: ${formatted_cost}"
         )
