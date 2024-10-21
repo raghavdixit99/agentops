@@ -19,6 +19,7 @@ import EnvTooltip from '/snippets/add-env-tooltip.mdx'
   <Step title="Add 2 lines of code">
     <CodeTooltip />
     <span className="api-key-container">
+    Get an AgentOps API key [here](https://app.agentops.ai/settings/projects)
       <CodeGroup>
         ```python python
         import agentops
@@ -27,19 +28,11 @@ import EnvTooltip from '/snippets/add-env-tooltip.mdx'
       </CodeGroup>
     </span>
     <EnvTooltip />
-    <span className="api-key-container">
-      <CodeGroup>
-        ```python .env
-        AGENTOPS_API_KEY=<YOUR API KEY>
-        ```
-      </CodeGroup>
-      Read more about [environment variables](/v1/usage/environment-variables)
-    </span>
   </Step>
   <Step title="Run your agent">
     Execute your program and visit [app.agentops.ai/drilldown](https://app.agentops.ai/drilldown) to observe your Agent! 🕵️
 
-    <Tip>After your run, AgentOps prints a clickable url to console linking directly to your session in the Dashboard</Tip> 
+    <Tip>After your run, AgentOps prints a clickable URL to console linking directly to your session in the Dashboard</Tip> 
      <div/>{/* Intentionally blank div for newline */}
 
      <Frame type="glass" caption="Clickable link to session">
@@ -54,12 +47,12 @@ import EnvTooltip from '/snippets/add-env-tooltip.mdx'
 <CardGroup cols={1}>
 
 <Card icon="code" title="Decorate Functions">
-  You can instrument other functions inside your code with the handy `@record_function`
+  You can instrument other functions inside your code with the handy `@record_action`
   decorator, which will record an `action_type`, the parameters, and the returns. You
   will see these function calls alongside your LLM calls from instantiating the AgentOps client.
   ```python python
   # (record specific functions)
-  @agentops.record_function('sample function being record')
+  @agentops.record_action('sample function being recorded')
   def sample_function(...):
     ...
 ```
@@ -77,7 +70,7 @@ import EnvTooltip from '/snippets/add-env-tooltip.mdx'
 
 </Card>
 <Card icon="stop" title="Ending Your Session">
-  Finally, you should end your session by calling `.end_session()` with whether your session 
+  Finally, you should end your session by calling `.end_session()` indicating whether your session 
   was successful or not `(Success|Fail)`. We suggest setting session state depending on how 
   your agent exits or whether your agent succeeded or not. You can also specify a end state reason,
   such as user interrupted, ran to completion, or unhandled exception.
@@ -101,7 +94,7 @@ import agentops
 agentops.init(<INSERT YOUR API KEY HERE>)
 
 # (record specific functions)
-@agentops.record_function('sample function being record')
+@agentops.record_action('sample function being record')
 def sample_function(...):
   ...
 

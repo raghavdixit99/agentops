@@ -30,6 +30,11 @@
   },
   "anchors": [
     {
+      "name": "Chat With Docs",
+      "icon": "user-doctor-message",
+      "url": "https://chatgpt.com/g/g-8wCVRuAsm-agentops-assistant"
+    },
+    {
       "name": "Your Dashboard",
       "icon": "chart-tree-map",
       "url": "https://app.agentops.ai"
@@ -47,7 +52,12 @@
     {
       "name": "Call my Agent (Support)",
       "icon": "headset",
-      "url": "mailto:alex@agentops.ai"
+      "url": "https://agentops.ai/contact"
+    },
+    {
+      "name": "Give Feedback",
+      "icon": "comment-smile",
+      "url": "https://agentops.ai/contact"
     }
   ],
   "navigation": [
@@ -61,7 +71,7 @@
       "group": "Getting Started",
       "pages": [
         "v1/quickstart",
-        "v1/examples"
+        "v1/examples/examples"
       ]
     },
     {
@@ -75,25 +85,26 @@
       ]
     },
     {
-      "group": "Usage",
-      "pages": [
-        "v1/usage/dashboard-info",
-        "v1/usage/sdk-reference",
-        "v1/usage/environment-variables",
-        "v1/usage/tracking-llm-calls",
-        "v1/usage/tracking-agents",
-        "v1/usage/recording-events",
-        "v1/usage/multiple-sessions"
-      ]
-    },
-    {
       "group": "Integrations",
       "pages": [
         "v1/integrations/crewai",
         "v1/integrations/autogen",
         "v1/integrations/langchain",
         "v1/integrations/cohere",
-        "v1/integrations/litellm"
+        "v1/integrations/litellm",
+        "v1/integrations/multion"
+      ]
+    },
+    {
+      "group": "Usage",
+      "pages": [
+        "v1/usage/dashboard-info",
+        "v1/usage/sdk-reference",
+        "v1/usage/advanced-configuration",
+        "v1/usage/tracking-llm-calls",
+        "v1/usage/tracking-agents",
+        "v1/usage/recording-events",
+        "v1/usage/multiple-sessions"
       ]
     },
     {
@@ -111,10 +122,5 @@
       "apiKey": "phc_BrY3H11IViWSoUJ0QFfjBx7kEwIJMT0PjBEXZQmddW",
       "apiHost": "https://us.i.posthog.com"
     }
-  },
-  "feedback": {
-    "thumbsRating": true,
-    "suggestEdit": true,
-    "raiseIssue": true
   }
 }

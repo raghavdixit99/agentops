@@ -1,65 +1,25 @@
 from pprint import pformat
 from functools import wraps
-import time
-from datetime import datetime
-import json
+from datetime import datetime, timezone
 import inspect
 from typing import Union
+import http.client
+import json
+from importlib.metadata import version, PackageNotFoundError
 
 from .log_config import logger
 from uuid import UUID
-import os
 from importlib.metadata import version
-
-
-PARTNER_FRAMEWORKS = {
-    # framework : instrument_llm_calls, auto_start_session
-    "autogen": (False, True),
-    "crewai": (False, True),
-}
-
-ao_instances = {}
-
-
-def singleton(class_):
-
-    def getinstance(*args, **kwargs):
-        if class_ not in ao_instances:
-            ao_instances[class_] = class_(*args, **kwargs)
-        return ao_instances[class_]
-
-    return getinstance
-
-
-def conditional_singleton(class_):
-
-    def getinstance(*args, **kwargs):
-        use_singleton = kwargs.pop("use_singleton", True)
-        if use_singleton:
-            if class_ not in ao_instances:
-                ao_instances[class_] = class_(*args, **kwargs)
-            return ao_instances[class_]
-        else:
-            return class_(*args, **kwargs)
-
-    return getinstance
-
-
-def clear_singletons():
-    global ao_instances
-    ao_instances = {}
 
 
 def get_ISO_time():
     """
-    Get the current UTC time in ISO 8601 format with milliseconds precision, suffixed with 'Z' to denote UTC timezone.
+    Get the current UTC time in ISO 8601 format with milliseconds precision in UTC timezone.
 
     Returns:
         str: The current UTC time as a string in ISO 8601 format.
     """
-    return (
-        datetime.utcfromtimestamp(time.time()).isoformat(timespec="milliseconds") + "Z"
-    )
+    return datetime.now(timezone.utc).isoformat()
 
 
 def is_jsonable(x):
@@ -99,20 +59,27 @@ def filter_unjsonable(d: dict) -> dict:
 
 def safe_serialize(obj):
     def default(o):
-        if isinstance(o, UUID):
-            return str(o)
-        elif hasattr(o, "model_dump_json"):
-            return o.model_dump_json()
-        elif hasattr(o, "to_json"):
-            return o.to_json()
-        elif hasattr(o, "json"):
-            return o.json()
-        elif hasattr(o, "to_dict"):
-            return o.to_dict()
-        elif hasattr(o, "dict"):
-            return o.dict()
-        else:
-            return f"<<non-serializable: {type(o).__qualname__}>>"
+        try:
+            if isinstance(o, UUID):
+                return str(o)
+            elif hasattr(o, "model_dump_json"):
+                return str(o.model_dump_json())
+            elif hasattr(o, "to_json"):
+                return str(o.to_json())
+            elif hasattr(o, "json"):
+                return str(o.json())
+            elif hasattr(o, "to_dict"):
+                return {k: str(v) for k, v in o.to_dict().items() if not callable(v)}
+            elif hasattr(o, "dict"):
+                return {k: str(v) for k, v in o.dict().items() if not callable(v)}
+            elif isinstance(o, dict):
+                return {k: str(v) for k, v in o.items()}
+            elif isinstance(o, list):
+                return [str(item) for item in o]
+            else:
+                return f"<<non-serializable: {type(o).__qualname__}>>"
+        except Exception as e:
+            return f"<<serialization-error: {str(e)}>>"
 
     def remove_unwanted_items(value):
         """Recursively remove self key and None/... values from dictionaries so they aren't serialized"""
@@ -159,6 +126,28 @@ def get_agentops_version():
         return None
 
 
+def check_agentops_update():
+    # using http.client to avoid this call being caught by requests_mock on tests
+    conn = http.client.HTTPSConnection("pypi.org")
+    conn.request("GET", "/pypi/agentops/json")
+    response = conn.getresponse()
+    data = response.read().decode()
+    json_data = json.loads(data)
+
+    if response.status == 200:
+        latest_version = json_data["info"]["version"]
+
+        try:
+            current_version = version("agentops")
+        except PackageNotFoundError:
+            return None
+
+        if not latest_version == current_version:
+            logger.warning(
+                f" WARNING: agentops is out of date. Please update with the command: 'pip install --upgrade agentops'"
+            )
+
+
 # Function decorator that prints function name and its arguments to the console for debug purposes
 # Example output:
 # <AGENTOPS_DEBUG_OUTPUT>
@@ -197,7 +186,3 @@ def debug_print_function_params(func):
         return func(self, *args, **kwargs)
 
     return wrapper
-
-
-def get_partner_frameworks():
-    return PARTNER_FRAMEWORKS

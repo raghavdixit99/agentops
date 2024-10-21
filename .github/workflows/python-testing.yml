@@ -4,9 +4,19 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'agentops/**/*.py'
+      - 'agentops/**/*.ipynb'
+      - 'tests/**/*.py'
+      - 'tests/**/*.ipynb'
   pull_request:
     branches:
       - main
+    paths:
+      - 'agentops/**/*.py'
+      - 'agentops/**/*.ipynb'
+      - 'tests/**/*.py'
+      - 'tests/**/*.ipynb'
 
 jobs:
   build:

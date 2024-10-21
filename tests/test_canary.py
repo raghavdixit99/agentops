@@ -1,10 +1,9 @@
 import pytest
-import requests
 import requests_mock
 import time
 import agentops
 from agentops import ActionEvent
-from agentops.helpers import clear_singletons
+from agentops.singleton import clear_singletons
 
 
 @pytest.fixture(autouse=True)
@@ -30,7 +29,7 @@ def mock_req():
 class TestCanary:
     def setup_method(self):
         self.url = "https://api.agentops.ai"
-        self.api_key = "random_api_key"
+        self.api_key = "11111111-1111-4111-8111-111111111111"
         agentops.init(api_key=self.api_key, max_wait_time=5, auto_start_session=False)
 
     def test_agent_ops_record(self, mock_req):

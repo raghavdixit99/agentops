@@ -1,7 +1,10 @@
-
 name: Tach Check
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - '**/*.py'
+      - '**/*.ipynb'
 
 jobs:
   tach-check:
