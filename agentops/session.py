@@ -284,8 +284,7 @@ class Session:
             self.jwt = jwt
             if jwt is None:
                 logger.error(
-                    f"Could not start session - server could not authenticate your API Key"
-                )
+logger.error('Could not start session - server could not authenticate your API Key')
                 return False
 
             session_url = res.body.get(
