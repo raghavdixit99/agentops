@@ -177,15 +177,9 @@ class HttpClient:
         if result.code == 400:
             if "message" in result.body:
                 raise ApiServerException(f"API server: {result.body['message']}")
-            else:
-                raise ApiServerException(f"API server: {result.body}")
-        if result.code == 500:
-            HttpClient._handle_failed_request(
-                url, payload, api_key, parent_key, token, "ServerError"
-            )
-            raise ApiServerException("API server: - internal server error")
-
-        return result
++            HttpClient._handle_failed_request(
++                url, payload, api_key, parent_key, token, "ServerError"
++            )
 
     @staticmethod
     def get(
