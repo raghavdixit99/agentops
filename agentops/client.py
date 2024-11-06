@@ -247,7 +247,7 @@ class Client(metaclass=MetaClient):
                         "blue",
                     )
                 )
-            else:
+            elif not session.is_running:
                 self._sessions.remove(session)
 
         session = Session(
@@ -258,8 +258,7 @@ class Client(metaclass=MetaClient):
             callback=_start_session_callback,
         )
 
-        if not session.is_running:
-            return logger.error("Failed to start session")
+        if not session.is_running:            return logger.error("Failed to start session")
 
         if self._pre_init_queue["agents"] and len(self._pre_init_queue["agents"]) > 0:
             for agent_args in self._pre_init_queue["agents"]:
