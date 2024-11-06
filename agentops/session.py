@@ -43,8 +43,7 @@ class Session:
         callback: Optional[Callable[["Session"], None]] = None,
     ):
         self.end_timestamp = None
-        self.end_state: Optional[str] = None
-        self.session_id = session_id
+        self.end_state: Optional[str] = None        self.session_id = session_id
         self.init_timestamp = get_ISO_time()
         self.tags: List[str] = tags or []
         self.video: Optional[str] = None
